@@ -7,6 +7,9 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
   },
+  resolve: {
+    extensions: [".js", ".jsx", ".ts", ".tsx"],
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "public", "index.html"),
@@ -15,19 +18,14 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.?(js|jsx)$/,
+        test: /\.?(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
           options: {
-            presets: ["@babel/preset-env", "@babel/preset-react"],
+            presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-typescript"],
           },
         },
-      },
-      {
-        test: /\.(ts|tsx)$/,
-        exclude: /node_modules/,
-        use: "ts-loader",
       },
       {
         test: /\.(css|scss)$/,
