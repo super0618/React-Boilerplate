@@ -23,13 +23,28 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-typescript"],
+            presets: [
+              "@babel/preset-env",
+              "@babel/preset-react",
+              "@babel/preset-typescript",
+            ],
           },
         },
       },
       {
-        test: /\.(css|scss)$/,
-        use: ["style-loader", "css-loader", "sass-loader"],
+        test: /\.(css|scss)$/i,
+        exclude: /node_modules/,
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              importLoaders: 1,
+              modules: true,
+            },
+          },
+          "sass-loader",
+        ],
       },
     ],
   },
