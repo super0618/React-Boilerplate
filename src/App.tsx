@@ -2,14 +2,18 @@ import React from "react";
 import { useRoutes, Outlet } from "react-router-dom";
 
 // Pages
-import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
+import About from "./pages/About";
 
 const App: React.FC = () => {
   const routes = [
     {
-      path: "",
+      path: "/",
       element: <Outlet />,
-      children: [{ path: "", element: <Dashboard /> }],
+      children: [
+        { path: "", element: <Home /> },
+        { path: "about", element: <About /> },
+      ],
     },
   ];
 
