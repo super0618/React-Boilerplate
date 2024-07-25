@@ -4,4 +4,8 @@
   max-width: $max-width;
   margin: 0 auto;
   padding: $global-padding;
+
+  & :global h1 {
+    margin: 0;
+  }
 }
