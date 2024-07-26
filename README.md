@@ -16,7 +16,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 ### Prerequisites
 
-- Node.js (v18 or higher recommended)
+- Node.js (v20.11.0 or higher recommended)
 - npm or yarn
 
 ### Installation
@@ -24,20 +24,14 @@ Follow these instructions to get a copy of the project up and running on your lo
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/super0618/React-Boilerplate.git
-   cd react-boilerplate
+   git clone https://github.com/super0618/React-Webpack.git
+   cd React-Webpack
    ```
 
 2. Install dependencies:
 
    ```bash
    npm install
-   ```
-
-   or
-
-   ```bash
-   yarn install
    ```
 
 ### Running the Development Server
@@ -48,12 +42,6 @@ Start the development server to serve the application locally with hot reloading
 npm start
 ```
 
-or
-
-```bash
-yarn start
-```
-
 Open your browser and navigate to `http://localhost:3000` to see the application running.
 
 ### Building for Production
@@ -62,12 +50,6 @@ To create a production build of the application:
 
 ```bash
 npm run build
-```
-
-or
-
-```bash
-yarn build
 ```
 
 The build output will be located in the `dist` directory.
@@ -84,11 +66,18 @@ react-boilerplate/
 ├── src/
 │   ├── components/
 │   ├── pages/
-│   ├── App.js
-│   ├── index.js
+│   ├── styles/
+│   ├── types/
+│   ├── App.tsx
+│   ├── index.tsx
 │   └── ...
 ├── .babelrc
 ├── .gitignore
+├── .nvmrc
+├── .prettierignore
+├── .prettierrc
+├── .vercelignore
+├── tsconfig.json
 ├── package.json
 ├── webpack.config.js
 └── README.md
@@ -99,9 +88,15 @@ react-boilerplate/
   fonts.
   - **components/**: React components.
   - **pages/**: React pages.
-  - **App.js**: Main application component.
-  - **index.js**: Entry point for the React application.
+  - **styles/**: Stylesheets.
+  - **types/**: Types & Interfaces.
+  - **App.tsx**: Main application component.
+  - **index.tsx**: Entry point for the React application.
 - **.babelrc**: Babel configuration file.
+- **.nvmrc**: NVM configuration file.
+- **.prettierrc**: Prettier configuration file.
+- **.prettierignore**: Prettier ignore file.
+- **tsconfig.json**: TypeScript configuration file.
 - **webpack.config.js**: Webpack configuration file.
 
 ## Scripts
@@ -110,8 +105,6 @@ The following scripts are available in the project:
 
 - `start`: Runs the development server.
 - `build`: Creates a production build of the application.
-- `lint`: Runs ESLint to check for linting errors.
-- `test`: Runs the test suite.
 
 ## Dependencies
 
@@ -119,6 +112,7 @@ The following scripts are available in the project:
 
 - `react`
 - `react-dom`
+- `react-router-dom`
 
 ### Development Dependencies
 
@@ -129,13 +123,16 @@ The following scripts are available in the project:
 - `@babel/core`
 - `@babel/preset-env`
 - `@babel/preset-react`
+- `@babel/preset-typescript`
+- `@types/node`
+- `@types/react`
+- `@types/react-dom`
+- `typescript`
 - `ts-loader`
 - `sass`
 - `sass-loader`
 - `css-loader`
 - `style-loader`
-- `eslint`
-- `eslint-plugin-react`
 
 ## Configuration
 
@@ -145,7 +142,11 @@ The Babel configuration is located in the `.babelrc` file. It includes presets f
 
 ```json
 {
-  "presets": ["@babel/preset-env", "@babel/preset-react"]
+  "presets": [
+    "@babel/preset-env",
+    "@babel/preset-react",
+    "@babel/preset-typescript"
+  ]
 }
 ```
 
@@ -155,40 +156,60 @@ The Webpack configuration is located in the `webpack.config.js` file. It include
 
 ```javascript
 const path = require("path");
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: path.join(__dirname, "src", "index.js"),
+  entry: path.join(__dirname, "src", "index.tsx"),
   output: {
     path: path.resolve(__dirname, "dist"),
   },
-  module: {
-    rules: [
-      {
-        test: /\.?(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: { presets: ["@babel/preset-env", "@babel/preset-react"] },
-        },
-      },
-      {
-        test: /\.(ts|tsx)$/,
-        exclude: /node_modules/,
-        use: "ts-loader",
-      },
-      {
-        test: /\.(css|scss)$/,
-        use: ["style-loader", "css-loader", "sass-loader"],
-      },
-    ],
+  resolve: {
+    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    alias: {
+      "@": path.resolve(__dirname, "src/"),
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "public", "index.html"),
     }),
   ],
+  module: {
+    rules: [
+      {
+        test: /\.?(js|jsx|ts|tsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [
+              "@babel/preset-env",
+              "@babel/preset-react",
+              "@babel/preset-typescript",
+            ],
+          },
+        },
+      },
+      {
+        test: /\.(css|scss)$/i,
+        exclude: /node_modules/,
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              importLoaders: 1,
+              modules: true,
+            },
+          },
+          "sass-loader",
+        ],
+      },
+    ],
+  },
   devServer: {
+    historyApiFallback: true,
     port: 3000,
   },
 };
