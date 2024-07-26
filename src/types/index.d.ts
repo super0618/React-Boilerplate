@@ -1,3 +1,6 @@
+// Components
+declare module "@/*";
+
 // StyleSheets
 declare module "*.css";
 declare module "*.scss";
@@ -11,4 +14,5 @@ declare module "*.gif";
 declare module "*.webp";
 declare module "*.bmp";
 
+// JSON
 declare module "*.json";
